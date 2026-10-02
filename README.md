@@ -7,7 +7,6 @@ criterion matters more than the geometry, and that silhouette is the wrong one.
 
 [![ci](https://github.com/Pchambet/functional-data-clustering/actions/workflows/ci.yml/badge.svg)](https://github.com/Pchambet/functional-data-clustering/actions/workflows/ci.yml)
 ![R](https://img.shields.io/badge/R-4.x-276DC3)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![Report (PDF, French, 18 pages)](https://img.shields.io/badge/report-PDF%2C%20French%2C%2018%20pages-0d9488)](docs/rapport_stage.pdf)
 
 *Version française : [README.fr.md](README.fr.md).*
