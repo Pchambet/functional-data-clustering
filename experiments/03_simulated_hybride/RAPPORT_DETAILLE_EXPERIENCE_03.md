@@ -38,7 +38,7 @@ Le clustering doit exploiter **à la fois** la forme (niveau, dérivée via le g
 
 ### 2.3 Lien avec la vision du projet
 
-Voir [`STATE_OF_PROJECT.md`](../../STATE_OF_PROJECT.md) : paradoxe **silhouette / ARI**, rôle des **dérivées** dans le signal fonctionnel, et distinction **`ω`** (distance `Dw`) vs **`r`** (pondération HFV en 02b).
+Voir le mémoire [`docs/rapport_stage.pdf`](../../docs/rapport_stage.pdf) : paradoxe **silhouette / ARI**, rôle des **dérivées** dans le signal fonctionnel, et distinction **`ω`** (distance `Dw`) vs **`r`** (pondération HFV en 02b).
 
 ---
 
@@ -187,7 +187,7 @@ Source : `results/ranking_by_scenario.csv`.
 |------|------------|------------|------------|------------|
 | 1 | C_DK_ancien (0.938) | C_DK_ancien (0.887) | A (0.623) | D1 (0.378) |
 | 2 | DK_reconstruit (0.897) | B_silopt / D1 / Df (0.873) | Ds (0.511) | C_DK_ancien (0.317) |
-| 3 | B_silopt / D1 / Df (0.873) | … | C_DK_ancien (0.461) | A (0.315) |
+| 3 | B_silopt / D1 / Df (0.873) | … | C_DK_ancien (0.464) | A (0.315) |
 
 - **S1–S2** : scores très élevés pour les méthodes qui exploitent bien le **noyau fonctionnel** (C, DK reconstruit, `D1`/`Df`/`B`).
 - **S3** : le signal fonctionnel faible favorise **`A`** (vecteur + scores) et **`Ds`** ; `B_silopt` / `Df_silopt` **chutent** (ARI ~0.24).

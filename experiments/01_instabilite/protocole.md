@@ -46,4 +46,4 @@ Pour le **volet simulé** seuls varient en principe : `SEEDS_SIM` (défaut `1L` 
 ## Références
 
 - Fang, Y., Wang, J. (2012). Selection of the number of clusters via the bootstrap method.
-- Voir aussi `docs/biblio/theorie_stabilite_clustering.tex` pour le contexte théorique général (certains passages parlent encore de « stabilité » au sens large).
+- Liste complète avec DOI : [`docs/biblio/README.md`](../../docs/biblio/README.md).

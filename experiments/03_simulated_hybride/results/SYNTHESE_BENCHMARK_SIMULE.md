@@ -1,44 +1,36 @@
-# Synthese benchmark simule (4 scenarios x 50 seeds)
+# Simulated benchmark — summary (4 scenarios × 50 seeds)
 
-**Rapport détaillé** (méthodologie, données simulées, résultats, interprétation) : **[`../RAPPORT_DETAILLE_EXPERIENCE_03.md`](../RAPPORT_DETAILLE_EXPERIENCE_03.md)**.
+Detailed report (French): [`../RAPPORT_DETAILLE_EXPERIENCE_03.md`](../RAPPORT_DETAILLE_EXPERIENCE_03.md).
+Output files and metric definitions: [`../PROTOCOLE_SORTIES.md`](../PROTOCOLE_SORTIES.md).
 
-## Protocole
-- Donnees : simulateur `Cas2_deriv` (`K=3` classes, `n=300`, `N=60`, **`p=20` par defaut** (`P_Z_SIM`) pour un bloc `Z` plus riche et une ACP hybride (02b) plus informative ; voir `PCA_Z_Q` dans `src/00_preprocess_simulated.R`).
-- Scenarios (triplet δ = (δ₁, δ₂, δ₃) pour `Cas2_deriv`, aligné `benchmark_all_methods_simulated.R`) : `S1` (1,1,1), `S2` (1,1,0.5), `S3` (0.5,0.5,1), `S4` (0.5,0.5,0.5).
-- Repetitions : 50 seeds/scenario.
-- Metriques : ARI, silhouette, matrices de confusion (seed 42 par scenario).
-- **Regle de conduite** : l'ARI (et toute verite terrain) ne sert **jamais** au choix des hyperparametres (`alpha`, `omega`, etc.) ; uniquement a l'**evaluation** des partitions obtenues. Les grilles utilisent la **silhouette** pour selectionner `alpha` / `(alpha, omega)` la ou un critere interne est requis.
-- **Nomenclature** : `ω` = poids Dw(α,ω) fonctionnel/vectoriel (grille 04) ; `r` = ratio HFV V_F/V_Y (02b), exporte pour `DK_reconstruit` uniquement. Colonnes CSV `omega` / `r` alignees sur cette convention.
+## Protocol
 
-## Methodes comparees
-- Baselines : `D0`, `D1`, `Df_silopt` (α par silhouette sur la grille), `Ds`.
-- Historiques : `A`, `B_silopt` (selection **silhouette** sur `(α,ω)`), `C (DK ancien)`.
-- Nouvelle chaine : `DK reconstruit` (`02b -> 03b`).
+- Generator `Cas2_deriv` ([`src/simulate_cas2_deriv.R`](../../../src/simulate_cas2_deriv.R)):
+  K = 3 classes of 100, curves on N = 60 points of [0, 1], covariate block of p = 20.
+- Scenarios δ = (δ₁ curve level, δ₂ curve derivative, δ₃ covariate means):
+  S1 (1, 1, 1), S2 (1, 1, 0.5), S3 (0.5, 0.5, 1), S4 (0.5, 0.5, 0.5).
+- Seeds 1–50 per scenario. Hyperparameters (α, ω) chosen by silhouette on a 21 × 21 grid; the
+  ARI is used only to evaluate the final partitions.
 
-## Constat principal (ARI moyen par scenario)
-Relancer `benchmark_all_methods_simulated.R` pour mettre a jour les CSV ; les classements par scenario sont dans `ranking_by_scenario.csv` et les moyennes dans `metrics_*`.
+## Mean ARI (from `metrics_summary_by_scenario_method.csv`)
 
-En resume qualitatif (datasets faciles vs difficiles) :
-- `S1` / `S2` : les methodes qui exploitent fortement la forme fonctionnelle (`D1`, `Df_silopt`, `B_silopt`) restent en tete.
-- `S3` / `S4` : le signal fonctionnel etant affaibli, les ecarts se resserrent ; `A` et `Ds` peuvent chuter.
+| Method | S1 | S2 | S3 | S4 | All |
+|---|---|---|---|---|---|
+| `D0` curves, level | 0.830 | 0.830 | 0.226 | 0.226 | 0.528 |
+| `D1` curves, derivative | 0.873 | 0.873 | 0.378 | **0.378** | 0.626 |
+| `Df_silopt` curves, Dp(α) | 0.873 | 0.873 | 0.237 | 0.237 | 0.555 |
+| `Ds` covariates | 0.567 | 0.333 | 0.511 | 0.247 | 0.414 |
+| `A` FPCA + Z, k-means | 0.782 | 0.524 | **0.623** | 0.315 | 0.561 |
+| `B_silopt` Dw(α, ω) | 0.873 | 0.873 | 0.239 | 0.238 | 0.556 |
+| `C_DK_ancien` kernel product | **0.938** | **0.887** | 0.464 | 0.317 | **0.651** |
+| `DK_reconstruit` HFV + DK | 0.897 | 0.802 | 0.433 | 0.301 | 0.608 |
 
-## Lecture scientifique
-1. Ajouter explicitement `D1` et `Df(alpha)` avec selection par **silhouette** permet de mesurer le gain lie a la forme sans utiliser l'ARI comme tuner.
-2. Le **paradoxe silhouette / ARI** se lit en comparant les metriques **apres** coup sur les memes runs : la silhouette ne predit pas toujours l'ARI — sans pour autant utiliser l'ARI pour regler quoi que ce soit.
-3. `DK reconstruit` propose une fusion HFV-PCA + noyaux ; sa performance se juge sur les memes regles (selection interne sans verite terrain pour les hyperparametres).
+## Reading
 
-## Protocole de sorties (fichiers + KPI + lecture console)
-
-Voir **[`../PROTOCOLE_SORTIES.md`](../PROTOCOLE_SORTIES.md)** : description de chaque CSV, définitions des métriques, et rapports automatiques via `emettre_rapport_sorties.R`.
-
-## Sorties produites
-- `metrics_all_runs.csv` : metriques run-level.
-- `metrics_summary_by_scenario_method.csv` : moyennes, ecarts-types, medianes, IQR.
-- `metrics_global_average_by_method.csv` : moyenne globale par methode.
-- `ranking_by_scenario.csv` : classement ARI par scenario (evaluation uniquement).
-- `confusion_*.csv` : matrices de confusion representatives (seed 42).
-- `qc_simulated_scenarios.csv` : diagnostics qualite des donnees simulees (`r_theorique` = V_F/V_Y sur scores/ Z).
-
-## Position RS-PCA vs HFV-PCA
-Voir `../NOTE_RS_PCA_VS_HFV_PCA.md` pour la clarification methodologique et le
-positionnement de la chaine `02b -> 03b`.
+- While the curves separate the classes (S1, S2) the kernel product C leads; the
+  silhouette-tuned B and Dp(α) collapse to the derivative distance D1 (same ARI, 0.873).
+- When the curve signal is halved (S3), B still picks a curves-only corner and drops to 0.239,
+  while FPCA + k-means (A) and the covariates alone (Ds) do best.
+- The HFV reconstruction (DK_reconstruit) is below C in every scenario on average.
+- Silhouette is highest for B / Dp(α) (≈ 0.29) and among the lowest for C / HFV (0.12–0.13), the opposite of
+  the ARI ranking: the silhouette/ARI paradox.

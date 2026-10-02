@@ -1,16 +1,13 @@
-# Expériences — inventaire réel du dépôt
+# Experiments
 
-Ce dossier regroupe les protocoles et résultats **hors** pipeline minimal [`src/main.R`](../src/main.R). Les répertoires listés ailleurs comme `02_vote_criteres/` ou `03_optimisation_bayesienne/` **n’existent pas** dans ce dépôt (voir historique du README racine).
+Protocols and results that go beyond the single-dataset pipeline in
+[`src/main.R`](../src/main.R). Detailed protocol notes inside each folder are in French.
 
-## Dossiers présents
+| Folder | Question | Entry point |
+|---|---|---|
+| [`01_instabilite/`](01_instabilite/) | Can bootstrap instability (Fang & Wang, `fpc::nselectboot`) choose k on the (α, ω) grid? Real datasets (21 × 21 grid, B = 150) and simulated scenarios. | `make exp01` |
+| [`03_simulated_hybride/`](03_simulated_hybride/) | Which fusion strategy recovers the classes when the signal is moved between curves and covariates? 4 scenarios × 50 seeds. | `make exp03` |
 
-| Dossier | Description |
-|---------|-------------|
-| [`01_instabilite/`](01_instabilite/) | Instabilité bootstrap, nselectboot (Fang–Wang), matrices de confusion, rapport LaTeX dédié ; sous-dossier [`archive/`](01_instabilite/archive/) pour anciens scripts stabilité. |
-| [`03_simulated_hybride/`](03_simulated_hybride/) | Données simulées Cas2_deriv, benchmark méthodes (A, B, C, baselines, DK reconstruit 02b+03b), CSV dans [`results/`](03_simulated_hybride/results/). |
-
-## Liens utiles
-
-- Périmètre rapport de stage : [`docs/RAPPORT_STAGE.md`](../docs/RAPPORT_STAGE.md)
-- Audit documentation + code : [`docs/AUDIT_PROJET.md`](../docs/AUDIT_PROJET.md)
-- État scientifique du projet : [`STATE_OF_PROJECT.md`](../STATE_OF_PROJECT.md)
+Summary of the results: [`../README.md`](../README.md). Full write-up: the thesis
+[`../docs/rapport_stage.pdf`](../docs/rapport_stage.pdf) and the stability report
+[`01_instabilite/rapport_instabilite.pdf`](01_instabilite/rapport_instabilite.pdf).
