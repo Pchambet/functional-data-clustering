@@ -1,5 +1,5 @@
 # LaTeX documents — run `make -C docs` from the repository root.
-# The thesis reads the tables in generated/ (regenerate with `make tables`)
+# The report reads the tables in generated/ (regenerate with `make tables`)
 # and the figures in ../figures/ and ../experiments/01_instabilite/figures/.
 
 LATEXMK = latexmk -pdf -interaction=nonstopmode -halt-on-error

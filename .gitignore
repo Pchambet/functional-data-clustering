@@ -2,7 +2,6 @@
 .RData
 .Rhistory
 .Rproj.user/
-docs/session_info.txt
 
 # LaTeX build artefacts
 *.aux
@@ -16,7 +15,7 @@ docs/session_info.txt
 *.fdb_latexmk
 *.fls
 
-# Compiled PDFs: only the thesis and the stability report are versioned
+# Compiled PDFs: only the project report and the stability report are versioned
 docs/*.pdf
 !docs/rapport_stage.pdf
 
