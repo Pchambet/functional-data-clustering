@@ -1,28 +1,23 @@
-# Makefile — Compilation des rapports LaTeX
-# Usage : make (depuis docs/) ou make -C docs
+# LaTeX documents — run `make -C docs` from the repository root.
+# The thesis reads the tables in generated/ (regenerate with `make tables`)
+# and the figures in ../figures/ and ../experiments/01_instabilite/figures/.
 
-TEX_FILES = resume_donnees_fonctionnelles rapport_distances rapport_canadian_weather rapport_synthese rapport_stage
+LATEXMK = latexmk -pdf -interaction=nonstopmode -halt-on-error
 
-.PHONY: all clean benchmark-tex paradox-tex ch6-real-tex
+.PHONY: all tables clean
 
-all: $(addsuffix .pdf,$(TEX_FILES))
-
-# Tableau ARI ch.5 (depuis CSV benchmark simulé) — lancer avant `make` si les CSV ont changé
-benchmark-tex:
-	cd .. && Rscript scripts/generate_rapport_stage_benchmark_tex.R
-
-# Tableau paradoxe silhouette / ARI ch.4 — relancer si la grille ou les jeux réels changent
-paradox-tex:
-	cd .. && Rscript scripts/generate_rapport_stage_paradox_tex.R
-
-# Tableau ch.6 (trois jeux réels) — exécuter d'abord le pipeline avec
-# CNAM_EXPORT_COMPARAISON=1 pour canadian, growth, tecator
-ch6-real-tex:
-	cd .. && Rscript scripts/generate_ch6_three_games_table_tex.R
+all: rapport_stage.pdf soutenance.pdf
 
 %.pdf: %.tex
-	pdflatex $<
-	pdflatex $<
+	$(LATEXMK) $<
+
+# Simulated benchmark table (chapter 5), silhouette/ARI paradox (chapter 4,
+# recomputes the grids, needs R), real-data table (chapter 6, needs the
+# docs/exports/ CSVs written by `make pipeline`).
+tables:
+	cd .. && Rscript scripts/generate_rapport_stage_benchmark_tex.R
+	cd .. && Rscript scripts/generate_rapport_stage_paradox_tex.R
+	cd .. && Rscript scripts/generate_ch6_three_games_table_tex.R
 
 clean:
-	rm -f *.aux *.log *.out *.toc *.synctex.gz *.fdb_latexmk *.fls
+	latexmk -c rapport_stage.tex soutenance.tex

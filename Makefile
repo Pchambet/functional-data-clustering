@@ -1,61 +1,44 @@
-# ============================================================================
-# Makefile — Point d'entrée unique pour le projet CNAM
-# ============================================================================
-#
-# Usage (depuis la racine du projet) :
-#   make all          # Pipeline R (3 datasets) + expérience 01 + compilation LaTeX
-#   make pipeline     # Uniquement pipeline R (figures, tableaux)
-#   make exp01        # Uniquement expérience 01 (stabilité + nselectboot)
-#   make latex        # Uniquement compilation des rapports LaTeX
-#   make test         # Vérification rapide (1 dataset + LaTeX)
-#
-# L'Agent Cursor doit utiliser : make all (ou make test pour un cycle court)
-# En cas d'erreur, lire le log du terminal et corriger.
-#
-# ============================================================================
+# Entry points — run from the repository root.
+#   make setup      install / check the R packages (fda, fda.usc, cluster, mclust, fpc)
+#   make pipeline   smoothing -> FPCA -> distances -> clustering on the 3 labelled datasets
+#   make exp01      bootstrap instability (fpc::nselectboot) on the (alpha, omega) grid — hours
+#   make exp03      simulated benchmark, 4 scenarios x 50 seeds — hours
+#   make tables     regenerate the LaTeX tables in docs/generated/ from the result CSVs
+#   make report     compile docs/rapport_stage.pdf and the stability report
+#   make figures    rebuild the README figures from the committed result tables (Python, uv)
+#   make check      verify README figures and numbers against the result tables
 
-.PHONY: all pipeline exp01 latex test clean help
+R_LOOP = for (d in c("canadian", "growth", "tecator")) { DATASET <<- d; source("src/main.R") }
 
-# --- Cibles principales ---
-all: pipeline exp01 latex
+.PHONY: all setup pipeline exp01 exp03 tables report figures check clean
 
-# Pipeline R : 3 datasets (Canadian, Growth, Tecator)
+all: pipeline exp01 exp03 tables report figures
+
+setup:
+	Rscript setup.R
+
 pipeline:
-	@echo ">>> Pipeline R (3 datasets)..."
-	@Rscript -e 'source("setup.R"); for (d in c("canadian","growth","tecator")) { DATASET <<- d; source("src/main.R") }'
-	@echo ">>> Pipeline terminé."
+	CNAM_EXPORT_COMPARAISON=1 Rscript -e 'source("setup.R"); $(R_LOOP)'
 
-# Expérience 01 : instabilité (nselectboot) + analyses + matrices de confusion
 exp01:
-	@echo ">>> Expérience 01 (instabilité / nselectboot)..."
-	@Rscript -e 'setwd("."); source("experiments/01_instabilite/run_all_complete.R")'
-	@echo ">>> Expérience 01 terminée."
+	Rscript -e 'source("experiments/01_instabilite/run_all_complete.R")'
 
-# Compilation LaTeX : docs/ + experiments/01_instabilite/
-latex:
-	@echo ">>> Compilation LaTeX (docs/)..."
-	@$(MAKE) -C docs all
-	@echo ">>> Compilation LaTeX (experiments/01_instabilite/)..."
-	@$(MAKE) -C experiments/01_instabilite
-	@echo ">>> LaTeX terminé."
+exp03:
+	Rscript -e 'source("experiments/03_simulated_hybride/benchmark_all_methods_simulated.R")'
 
-# Test rapide : 1 dataset (canadian) + compilation rapport synthèse
-test:
-	@echo ">>> Test rapide (canadian + LaTeX)..."
-	@Rscript -e 'source("setup.R"); DATASET <<- "canadian"; source("src/main.R")'
-	@$(MAKE) -C docs rapport_synthese.pdf
-	@echo ">>> Test terminé."
+tables:
+	$(MAKE) -C docs tables
 
-# Nettoyage des artefacts LaTeX
+report:
+	$(MAKE) -C docs
+	$(MAKE) -C experiments/01_instabilite
+
+figures:
+	uv run --locked --script scripts/readme_figures.py
+
+check:
+	uv run --locked --script scripts/readme_figures.py --check
+
 clean:
 	$(MAKE) -C docs clean
 	$(MAKE) -C experiments/01_instabilite clean
-
-help:
-	@echo "Cibles disponibles :"
-	@echo "  make all      — Pipeline R + Exp01 + LaTeX (complet)"
-	@echo "  make pipeline — Pipeline R uniquement (3 datasets)"
-	@echo "  make exp01    — Expérience 01 uniquement"
-	@echo "  make latex    — Compilation LaTeX uniquement"
-	@echo "  make test     — Test rapide (canadian + rapport_synthese)"
-	@echo "  make clean    — Nettoyage .aux .log .out .toc"

@@ -17,7 +17,8 @@ packages_requis <- c(
     "fda",      # Analyse de données fonctionnelles (Ramsay & Silverman)
     "fda.usc",  # Jeux Tecator et utilitaires (et fda pour Canadian/Growth)
     "cluster",  # PAM (Partitioning Around Medoids) + silhouette
-    "mclust"    # adjustedRandIndex (ARI)
+    "mclust",   # adjustedRandIndex (ARI)
+    "fpc"       # nselectboot (instabilité bootstrap, expérience 01)
 )
 
 # --- Installation si absent ---
