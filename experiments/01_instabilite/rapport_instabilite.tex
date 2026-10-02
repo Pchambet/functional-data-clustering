@@ -28,7 +28,7 @@
 
 \title{Rapport d'instabilité (Fang \& Wang)}
 \author{Pierre Chambet}
-\date{Mars 2026}
+\date{Mars 2026 (révisé en octobre 2026)}
 
 \begin{document}
 \maketitle
@@ -119,9 +119,15 @@ Les fichiers \texttt{nselectboot\_*.csv} et les figures
 
 \subsection{Résumé sur la grille}
 
-En regardant la médiane des $k_\text{opt}$ sur les 441 couples : Canadian
-$\to 4$, Growth $\to 2$, Tecator $\to 3$, cohérent avec les
-$k_{\mathrm{vrai}}$ retenus pour l'évaluation (sauf conventions sur Tecator).
+La médiane des $k_\text{opt}$ sur les 441 couples vaut 2 pour les trois jeux
+(Canadian, Growth, Tecator). Le vrai $k$ n'est retenu qu'en 1 couple sur 441
+pour Canadian ($k_{\mathrm{vrai}}=4$), 276 sur 441 pour Growth
+($k_{\mathrm{vrai}}=2$) et 4 sur 441 pour Tecator ($k_{\mathrm{vrai}}=3$).
+La réponse la plus fréquente est $k=2$ (223 couples sur 441 pour Canadian,
+382 pour Tecator), suivie de la plus grande valeur testée, $k=6$ (201 couples
+pour Canadian). Sur ces trois jeux, l'instabilité bootstrap ne retrouve donc
+pas le nombre de classes~; sur Growth, où $k_{\mathrm{vrai}}=2$, elle tombe
+juste parce que $k=2$ est sa réponse par défaut.
 
 % ============================================================================
 \section{Résultats : triplets retenus pour l'évaluation (nselectboot)}
@@ -130,6 +136,8 @@ $k_{\mathrm{vrai}}$ retenus pour l'évaluation (sauf conventions sur Tecator).
 Pour les matrices de confusion, on prend le premier couple $(\alpha,\omega)$ de
 la grille tel que $k_\text{opt} = k_{\mathrm{vrai}}$ (sinon le plus proche), comme
 dans \texttt{generate\_confusion\_nselectboot.R}.
+Ce choix utilise le vrai $k$~: les ARI ci-dessous illustrent la partition obtenue
+\emph{lorsque} la méthode tombe sur le bon $k$, pas une procédure non supervisée.
 
 \begin{table}[H]
 \centering
@@ -233,7 +241,7 @@ $(\alpha,\omega)$ de la grille pour lesquels le $k$ choisi par la méthode est
 exactement le vrai $k$ ; la \emph{médiane} des $k$ choisis sur toute la grille ;
 le \emph{mode} (valeur la plus fréquente). Ces nombres viennent d'un calcul
 \textbf{plus léger} qu'en données réelles : grille $6\times6$ en $(\alpha,\omega)$
-(pas de $0{,}05$ entre les points), et $B=60$ tirages bootstrap au lieu de
+(pas de $0{,}2$ entre les points), et $B=60$ tirages bootstrap au lieu de
 $B=150$, pour limiter le temps de calcul.
 
 \begin{table}[H]
@@ -302,9 +310,13 @@ Même réglage que pour le tableau~\ref{tab:sim-summary}.
 
 L'expérience 1 s'appuie sur une méthode publiée (instabilité bootstrap, Fang \&
 Wang) pour choisir $k$ à $(\alpha,\omega)$ fixé, puis explore toute la grille.
-Les labels servent uniquement à l'ARI et aux matrices de confusion, pas au choix
-de $(k,\alpha,\omega)$. Les études sur données simulées illustrent la méthode quand
-le vrai $k$ est connu ; elles ne remplacent pas l'étude sur les trois jeux réels.
+Le choix de $k$ n'utilise pas les labels~; ceux-ci servent à l'ARI, et le vrai $k$
+sert à choisir le couple $(\alpha,\omega)$ des matrices de confusion. Sur les
+trois jeux réels, la méthode répond $k=2$ sur la majorité de la grille et ne
+retrouve pas le vrai nombre de classes (1 et 4 couples sur 441 pour Canadian et
+Tecator). En simulation, elle retrouve $k=3$ quand les courbes portent un signal
+fort (S1, S2) et échoue sinon (S3, S4). Ces études simulées ne remplacent pas
+l'étude sur les trois jeux réels.
 
 \vspace{1em}
 \noindent\textbf{Références :}
