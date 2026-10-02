@@ -1,44 +1,51 @@
-## Bibliographie ACP hybride, RS-PCA et clustering
+# References
 
-Ce dossier rassemble les références bibliographiques et les notes de travail
-liées au projet de classification non supervisée de données mixtes
-fonctionnelles + vectorielles.
+Papers and books the project builds on. Publisher PDFs are not redistributed here;
+follow the DOI links.
 
-- **`articles/`**
-  - `Jang_2021_ACPF_hybride.pdf` : article de Jang (2021) sur l'ACP
-    de données hybrides fonctionnelles + vectorielles (HFV-PCA / ACPF hybride).
-    C'est la référence principale pour les méthodes RS-PCA / HFV-PCA mentionnées
-    dans le plan de stage.
-  - `bioinformatics_19_9_1090.pdf` : Dudoit & Fridlyand (2003), *Bagging to improve
-    the accuracy of a clustering procedure*, Bioinformatics, vol. 19, n° 9, p. 1090.
-    Référence pour le bagging et l'instabilité en clustering.
-  - Clest (2002) : Dudoit & Fridlyand, *A prediction-based resampling method for
-    estimating the number of clusters*, Genome Biology, 3(7), research0036.
-    Méthode de sélection de k par prédictibilité + calibration par nullité.
-  - Fang & Wang (2012) : *Selection of the number of clusters via the bootstrap
-    method*, Computational Statistics and Data Analysis, 56(3), 468–477.
-    Implémenté dans `fpc::nselectboot`.
-  - Wang (2010) : *Consistent selection of the number of clusters via crossvalidation*,
-    Biometrika, 97(4), 893–904. Base théorique pour l'instabilité.
+## Functional data and hybrid PCA
 
-- **`theorie_stabilite_clustering.tex`** : document théorique détaillant les maths
-  derrière Clest, bagging, Fang-Wang, Wang et notre protocole actuel.
+- Ramsay, J. O., & Silverman, B. W. (2005). *Functional Data Analysis* (2nd ed.).
+  Springer. [doi:10.1007/b98888](https://doi.org/10.1007/b98888)
+  — smoothing, functional PCA; source of the Canadian Weather and Berkeley Growth data.
+- Jang, J. H. (2021). Principal component analysis of hybrid functional and vector data.
+  *Statistics in Medicine*, 40(24). [doi:10.1002/sim.9117](https://doi.org/10.1002/sim.9117)
+  — joint covariance of curve scores and vector covariates; basis of the HFV step
+  (`src/02b_pca_hybride_reconstruction.R`).
 
+## Kernel clustering
 
-- **`books/`**
-  - `Ramsay_Silverman_Functional_data_analysis.pdf` : livre de Ramsay & Silverman,
-    référence de base sur les données fonctionnelles et l'ACP fonctionnelle.
-    Le chapitre sur l'analyse de données mixtes est directement lié à l'ACP
-    hybride demandée par les encadrants.
+- Ferreira, M. R. P., & de Carvalho, F. A. T. (2014). Kernel-based hard clustering
+  methods in the feature space with automatic variable weighting. *Pattern Recognition*,
+  47(9). [doi:10.1016/j.patcog.2014.03.026](https://doi.org/10.1016/j.patcog.2014.03.026)
+  — kernel-space clustering framework behind strategy C (product of Gaussian kernels).
 
-- **`notes/`**
-  - `RE_Lectures_ACP_hybride/` : notes et scripts associés aux lectures sur
-    l'ACP hybride :
-    - `Plan_de_simulations.pdf` : plan de simulation de données hybrides.
-    - `simulations.R` : script R associé pour générer des données simulées.
-    Ces fichiers servent de point de départ pour les expériences sur données
-    hybrides simulées mentionnées dans le plan de stage.
+## Choosing k and validating partitions
 
-Ce sous-dossier est purement documentaire : tout le code exécutable lié aux
-expériences se trouve dans `src/` (briques génériques) et `experiments/`.
+- Rousseeuw, P. J. (1987). Silhouettes: a graphical aid to the interpretation and
+  validation of cluster analysis. *Journal of Computational and Applied Mathematics*, 20.
+  [doi:10.1016/0377-0427(87)90125-7](https://doi.org/10.1016/0377-0427(87)90125-7)
+- Hubert, L., & Arabie, P. (1985). Comparing partitions. *Journal of Classification*, 2.
+  [doi:10.1007/BF01908075](https://doi.org/10.1007/BF01908075) — Adjusted Rand Index.
+- Dudoit, S., & Fridlyand, J. (2002). A prediction-based resampling method for estimating
+  the number of clusters in a dataset (Clest). *Genome Biology*, 3(7).
+  [doi:10.1186/gb-2002-3-7-research0036](https://doi.org/10.1186/gb-2002-3-7-research0036)
+- Dudoit, S., & Fridlyand, J. (2003). Bagging to improve the accuracy of a clustering
+  procedure. *Bioinformatics*, 19(9).
+  [doi:10.1093/bioinformatics/btg038](https://doi.org/10.1093/bioinformatics/btg038)
+- Wang, J. (2010). Consistent selection of the number of clusters via crossvalidation.
+  *Biometrika*, 97(4). [doi:10.1093/biomet/asq061](https://doi.org/10.1093/biomet/asq061)
+- Fang, Y., & Wang, J. (2012). Selection of the number of clusters via the bootstrap
+  method. *Computational Statistics & Data Analysis*, 56(3).
+  [doi:10.1016/j.csda.2011.09.003](https://doi.org/10.1016/j.csda.2011.09.003)
+  — implemented in `fpc::nselectboot`, used in `experiments/01_instabilite/`.
 
+## Datasets
+
+All three labelled datasets ship with CRAN packages; nothing is downloaded by hand.
+
+| Dataset | R source | Curve | Covariates | Label |
+|---|---|---|---|---|
+| Canadian Weather (35 stations) | `fda::CanadianWeather` | daily mean temperature, 365 days | latitude, longitude, mean precipitation | climate region (4) |
+| Berkeley Growth (93 children) | `fda::growth` | height at 31 ages, 1–18 years | final height, total growth (both derived from the curve) | sex (2) |
+| Tecator (215 meat samples) | `fda.usc::tecator` | NIR absorbance, 100 wavelengths (850–1050 nm) | water, protein content | fat class: <15 %, 15–30 %, >30 % (3) |
