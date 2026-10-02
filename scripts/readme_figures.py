@@ -247,7 +247,7 @@ def fig_hero(paradox: pd.DataFrame, path: Path) -> None:
     ax.text(
         0.0,
         1.13,
-        "Tuning the fusion weights by silhouette costs 0.28–0.48 ARI",
+        "Silhouette tuning lands 0.28–0.48 ARI below the best grid point",
         transform=ax.transAxes,
         fontsize=12.5,
         fontweight="bold",
@@ -264,7 +264,7 @@ def fig_hero(paradox: pd.DataFrame, path: Path) -> None:
     top = order.iloc[-1]
     for x, label, color, ha in (
         (top.sil_ari, "chosen by silhouette\n(unsupervised)", AMBER, "right"),
-        (top.best_ari, "best point on the grid\n(needs the labels)", TEAL, "left"),
+        (top.best_ari, "best point on the grid\n(oracle: needs the labels)", TEAL, "left"),
     ):
         ax.annotate(
             label,

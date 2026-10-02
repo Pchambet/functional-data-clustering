@@ -1,29 +1,29 @@
 # functional-data-clustering
 
 When every observation is a **curve plus a vector of covariates**, how should the two be fused
-to find clusters — and can the fusion be tuned without labels? Four fusion strategies against
-single-block baselines, on three public datasets and 200 simulated runs, with an honest answer:
-the geometry matters less than the tuning criterion, and silhouette is the wrong one.
+to find clusters, and can the fusion be tuned without labels? Four fusion strategies against
+single-block baselines, on three public datasets and 200 simulated runs, show that the tuning
+criterion matters more than the geometry, and that silhouette is the wrong one.
 
 [![ci](https://github.com/Pchambet/functional-data-clustering/actions/workflows/ci.yml/badge.svg)](https://github.com/Pchambet/functional-data-clustering/actions/workflows/ci.yml)
 ![R](https://img.shields.io/badge/R-4.x-276DC3)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-[![Thesis (PDF)](https://img.shields.io/badge/thesis-PDF%2C%2018%20pages-0d9488)](docs/rapport_stage.pdf)
+[![Report (PDF, French, 18 pages)](https://img.shields.io/badge/report-PDF%2C%20French%2C%2018%20pages-0d9488)](docs/rapport_stage.pdf)
 
 *Version française : [README.fr.md](README.fr.md).*
 
-![Silhouette-tuned versus best achievable ARI on three labelled datasets](docs/figures/hero_silhouette_gap.png)
+![Silhouette-tuned versus best-on-grid (oracle) ARI on three labelled datasets](docs/figures/hero_silhouette_gap.png)
 
 ## TL;DR
 
 - **Silhouette tuning is the bottleneck.** Choosing the curve/covariate weights (α, ω) of a
   weighted distance by silhouette lands on a single-modality corner on all three real datasets
-  and recovers far less of the true structure than the same grid allows:
+  and scores far below the best point of the same grid (an oracle that needs the labels):
   ARI 0.616 vs 0.898 (Canadian Weather), 0.424 vs 0.756 (Berkeley Growth),
   0.151 vs 0.626 (Tecator).
-- **No fusion geometry wins everywhere.** On real data the best ARI comes from the simplest
-  fusion, FPCA scores + covariates with k-means (0.748 Canadian Weather, 0.682 Berkeley Growth),
-  or from the covariates alone (0.546 Tecator).
+- **No fusion geometry wins everywhere.** On real data the best ARI among methods tuned without
+  labels comes from the simplest fusion, FPCA scores + covariates with k-means (0.748 Canadian
+  Weather, 0.682 Berkeley Growth), or from the covariates alone (0.546 Tecator).
 - **Simulation tells the same story** (4 scenarios × 50 seeds, n = 300, k = 3). A product of
   Gaussian kernels has the best overall mean ARI (0.651) and wins while the curves separate the
   classes (0.938 and 0.887 in S1–S2); when the curve signal is halved, FPCA + k-means wins S3
@@ -34,7 +34,8 @@ the geometry matters less than the tuning criterion, and silhouette is the wrong
   on real data.
 - **Bootstrap instability does not rescue k either.** `fpc::nselectboot` returns the true number
   of classes in 1 of 441 grid points on Canadian Weather and 4 of 441 on Tecator
-  (276 of 441 on Berkeley Growth, where k = 2).
+  (276 of 441 on Berkeley Growth, where k = 2, but k = 2 is also its most frequent answer on
+  the other two datasets: 223 of 441 on Canadian Weather, 382 of 441 on Tecator).
 
 ## Why it matters
 
@@ -51,7 +52,7 @@ blobs over the real structure.
 flowchart LR
   X["Curve X(t)"] --> S["B-spline smoothing<br/>λ by GCV"] --> F["FPCA<br/>95 % variance"]
   Z["Covariates Z"] --> N["Standardise"]
-  F --> G["Six fusion geometries"]
+  F --> G["Single-block baselines<br/>+ 4 fusions"]
   N --> G
   G --> C["PAM / k-means<br/>k = true number of classes"]
   C --> E["Silhouette: used for tuning<br/>ARI: used for evaluation only"]
@@ -72,14 +73,18 @@ flowchart LR
    cross-covariance block $V_{yx}$), curves reconstructed, then $D_K$.
 3. **Protocol.** Hyperparameters (α, ω) are chosen by mean silhouette on a 21 × 21 grid; the
    labels are used **only** to score the final partition with the Adjusted Rand Index. The
-   "best on grid" points in the hero figure are a counterfactual that needs the labels.
+   "best on grid" points in the hero figure are an oracle that needs the labels: the maximum ARI
+   over 441 configurations, which is an optimistic upper bound (on 35 stations, part of that
+   maximum is selection on noise).
 4. **Choosing k.** Separately, bootstrap instability (Fang & Wang, 2012) is mapped over the
-   same (α, ω) grid with B = 150 resamples and k ∈ {2, …, 6}.
+   same (α, ω) grid with B = 150 resamples and k ∈ {2, …, 6} (simulated data: a coarser
+   6 × 6 grid with B = 60).
 
 ## Results
 
 **Real data** — ARI against the true labels (silhouette in brackets), k fixed to the number of
-classes. Best ARI per dataset in bold.
+classes. Best ARI per dataset in bold. The derivative baseline $D_1$ is reported only in
+simulation; on real data it is the (α = 1, ω = 1) corner of B's grid.
 
 | Method | Canadian Weather (n = 35, k = 4) | Berkeley Growth (n = 93, k = 2) | Tecator (n = 215, k = 3) |
 |---|---|---|---|
@@ -102,12 +107,6 @@ Takeaway: the ranking depends on where the signal lives. Silhouette-tuned B (amb
 to a pure curve-distance corner (ω = 1, α ∈ {0, 1}) in every S1–S2 run and in 80 % of S3–S4
 runs, which is right in S1–S2 (0.873) and wrong once the covariates carry the signal (0.239 in S3).
 
-**The paradox on one dataset** — silhouette (left) and ARI (right) over the (α, ω) grid on
-Canadian Weather. The silhouette peaks at the covariates-only corner (×); the ARI plateau is
-in the mixed region.
-
-![Silhouette and ARI over the alpha-omega grid, Canadian Weather](figures/canadian_weather/fig05_gridsearch_2D.png)
-
 **Choosing k without labels** — share of the (α, ω) grid where `nselectboot` selects the true k.
 
 | Data | True k | Grid | True k selected |
@@ -115,7 +114,7 @@ in the mixed region.
 | Canadian Weather | 4 | 21 × 21, B = 150 | 1 / 441 |
 | Berkeley Growth | 2 | 21 × 21, B = 150 | 276 / 441 |
 | Tecator | 3 | 21 × 21, B = 150 | 4 / 441 |
-| Simulated S1 / S2 / S3 / S4 (seed 1) | 3 | 6 × 6, fast mode | 33 / 26 / 3 / 0 of 36 |
+| Simulated S1 / S2 / S3 / S4 (seed 1) | 3 | 6 × 6, B = 60 (fast mode) | 33 / 26 / 3 / 0 of 36 |
 
 Takeaway: on real data instability mostly picks k = 2 or the largest k tried (6); it finds the
 true k = 3 only when the simulated curves carry a strong signal.
@@ -133,10 +132,17 @@ ship with those packages, so there is nothing to download.
 make setup      # install / check packages, write docs/session_info.txt
 make pipeline   # three real datasets: figures/<dataset>/ and docs/exports/*.csv
 make exp03      # simulated benchmark, 4 scenarios x 50 seeds (long)
-make exp01      # bootstrap instability, 21 x 21 grid x B = 150 (long)
+make exp01      # bootstrap instability on the real datasets, 21 x 21 grid x B = 150 (long)
+make exp01-sim  # same on simulated S1-S4, seed 1, fast mode: 6 x 6 grid x B = 60
 make tables     # regenerate docs/generated/*.tex from the result CSVs
-make report     # compile the thesis and the stability report (LaTeX, latexmk)
+make report     # compile the project report and the stability report (LaTeX, latexmk)
 ```
+
+`make exp01-sim` reproduces the committed simulated rows of the instability table (the script
+estimates 15 to 25 minutes). The full
+simulated design (21 × 21, B = 150, several hours) is
+`Rscript experiments/01_instabilite/run_simulated_instabilite_only.R --full`; it overwrites
+`experiments/01_instabilite/results_simulated/` with a different design.
 
 The README figures and numbers are rebuilt from the committed CSVs without R
 (Python 3.12 via [uv](https://docs.astral.sh/uv/), a few seconds):
@@ -163,8 +169,9 @@ experiments/
   01_instabilite/         nselectboot over the (α, ω) grid, real and simulated data
   03_simulated_hybride/   simulated benchmark: protocol, results (CSV), detailed report
 scripts/                  LaTeX table generators (R) and README figures (Python)
-docs/                     thesis (rapport_stage.tex/.pdf), slides, generated tables, references
-figures/<dataset>/        figures written by the pipeline
+docs/                     project report (rapport_stage.tex/.pdf), slides, generated tables, references
+figures/<dataset>/        figures written by the pipeline (French labels; fig05 maps
+                          silhouette and ARI over B's (α, ω) grid)
 ```
 
 ## Methodology notes and limitations
@@ -175,18 +182,27 @@ figures/<dataset>/        figures written by the pipeline
 - **Small real datasets.** Canadian Weather has 35 stations, so a single misassigned station
   moves the ARI noticeably. The real-data table is one deterministic run per method, without
   resampling intervals.
-- **Covariates are not always independent of the label or of the curve.** On Tecator the
-  label is a binned fat content and the covariates are water and protein, which are
-  chemically tied to fat; this explains why the covariates alone win. On Berkeley Growth both
-  covariates (final height, total growth) are computed from the curve itself.
+- **On all three real datasets the covariates are tied to the label or to the curve.** On
+  Canadian Weather the label is a geographic climate region and two of the three covariates
+  are the station's latitude and longitude, so the covariates alone carry much of the label
+  (ARI 0.616 for $D_s$). On Tecator the label is a binned fat content and the covariates are
+  water and protein, which are chemically tied to fat; this explains why the covariates alone
+  win. On Berkeley Growth both covariates (final height, total growth) are computed from the
+  curve itself.
+- **Silhouettes from different distances are not on a common scale.** The silhouette of each
+  method is computed in its own space ($D_0$, $D_s$, $D_w$, $D_K$, the k-means feature space
+  of A), so comparing them across methods, or across corners of B's grid, is not comparing like
+  with like. This is one mechanism behind the paradox: single-block corners can simply have a
+  more favourable silhouette scale.
 - **Simulation is one generative model.** Conclusions on S1–S4 are conditional on the Fourier
   basis and the effect sizes of `Cas2_deriv`. The simulated `nselectboot` run uses a reduced
-  6 × 6 grid and a single seed.
+  6 × 6 grid, B = 60 and a single seed.
 - **Kernel bandwidths** use the median heuristic and are not tuned; a different choice could
   change the ranking of C and HFV.
-- **Reproducibility.** Package versions are not pinned (no `renv.lock`); `make setup` records
-  `sessionInfo()` in `docs/session_info.txt`. The thesis, the slides and code comments are in
-  French; the slides need the LaTeX `beamer` class.
+- **Reproducibility.** Package versions are not pinned (no `renv.lock`), and the R and package
+  versions behind the committed results were not recorded. `make setup` writes `sessionInfo()`
+  to `docs/session_info.txt`, which is meant to be committed with the next run. The report,
+  the slides and code comments are in French; the slides need the LaTeX `beamer` class.
 
 ## References
 
@@ -205,7 +221,7 @@ Full list with DOIs and dataset sources: [docs/biblio/README.md](docs/biblio/REA
 
 M2 TRIED research project ("projet long"), CNAM, CEDRIC lab (MSDMA team), 2026. Subject
 proposed and supervised by V. Audigier, F. Bouhadjera and N. Niang. The full write-up is the
-thesis in [`docs/rapport_stage.pdf`](docs/rapport_stage.pdf) (French).
+18-page project report in [`docs/rapport_stage.pdf`](docs/rapport_stage.pdf) (French).
 
 ---
 
