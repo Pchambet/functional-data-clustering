@@ -1,37 +1,33 @@
-# Session info (regenerable via setup.R)
-docs/session_info.txt
-
-# R session files
+# R session
 .RData
 .Rhistory
 .Rproj.user/
+docs/session_info.txt
 
-# LaTeX build files
+# LaTeX build artefacts
 *.aux
 *.log
 *.out
 *.toc
+*.nav
+*.snm
+*.vrb
 *.synctex.gz
 *.fdb_latexmk
 *.fls
 
-# PDF outputs (regenerable from .tex)
+# Compiled PDFs: only the thesis and the stability report are versioned
 docs/*.pdf
+!docs/rapport_stage.pdf
 
-# OS files
+# Intermediate R objects
+*.rds
+
+# Python (README figure script)
+.venv/
+__pycache__/
+.ruff_cache/
+
+# OS / editors
 .DS_Store
 Thumbs.db
-
-# Large data files (not versioned — download separately)
-data/shom_celerite_2018.csv
-
-# Generated figures (reproductibles via src/main.R) — racine du dépôt uniquement
-/figures/
-
-# Large data outputs (keep raw data in data/)
-*.rds
-!data/*.rds
-
-# Archive (old files moved here during cleanup)
-_archive/
-resources/
