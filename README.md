@@ -8,7 +8,7 @@ criterion deserves as much attention as the distance.
 
 [![ci](https://github.com/Pchambet/functional-data-clustering/actions/workflows/ci.yml/badge.svg)](https://github.com/Pchambet/functional-data-clustering/actions/workflows/ci.yml)
 ![R](https://img.shields.io/badge/R-4.x-276DC3)
-[![Report (PDF, French, 18 pages)](https://img.shields.io/badge/report-PDF%2C%20French%2C%2018%20pages-0d9488)](docs/rapport_stage.pdf)
+[![Report (PDF, French, 18 pages)](https://img.shields.io/badge/report-PDF%2C%20French%2C%2018%20pages-0d9488)](docs/rapport_projet_long.pdf)
 
 *Version française : [README.fr.md](README.fr.md).*
 
@@ -185,7 +185,7 @@ experiments/
   01_instabilite/         nselectboot over the (α, ω) grid, real and simulated data
   03_simulated_hybride/   simulated benchmark: protocol, results (CSV), detailed report
 scripts/                  LaTeX table generators (R) and README figures (Python)
-docs/                     project report (rapport_stage.tex/.pdf), slides, generated tables, references
+docs/                     project report (rapport_projet_long.tex/.pdf), slides, generated tables, references
 figures/<dataset>/        figures written by the pipeline (French labels; fig05 maps
                           silhouette and ARI over B's (α, ω) grid)
 ```
@@ -237,7 +237,7 @@ Full list with DOIs and dataset sources: [docs/biblio/README.md](docs/biblio/REA
 
 M2 TRIED research project ("projet long"), CNAM, CEDRIC lab (MSDMA team), 2026. Subject
 proposed and supervised by V. Audigier, F. Bouhadjera and N. Niang. The full write-up is the
-18-page project report in [`docs/rapport_stage.pdf`](docs/rapport_stage.pdf) (French).
+18-page project report in [`docs/rapport_projet_long.pdf`](docs/rapport_projet_long.pdf) (French).
 The report (March 2026) predates this re-analysis; where they differ (HFV, instability,
 simulated `nselectboot` settings), the README numbers are the ones checked against the result
 files. The stability report

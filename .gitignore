@@ -17,7 +17,7 @@
 
 # Compiled PDFs: only the project report and the stability report are versioned
 docs/*.pdf
-!docs/rapport_stage.pdf
+!docs/rapport_projet_long.pdf
 
 # Intermediate R objects
 *.rds

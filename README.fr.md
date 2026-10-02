@@ -7,7 +7,7 @@ Classification non supervisée de données mixtes : chaque individu est décrit 
 $\mathbb{R}^p$). Comment fusionner les deux pour former des groupes, et peut-on régler cette
 fusion sans étiquettes ? Projet long du Master TRIED, CNAM (laboratoire CEDRIC, équipe MSDMA),
 2026, proposé et encadré par V. Audigier, F. Bouhadjera et N. Niang. Le rapport complet (18 pages) :
-[`docs/rapport_stage.pdf`](docs/rapport_stage.pdf). Ce rapport (mars 2026) précède la
+[`docs/rapport_projet_long.pdf`](docs/rapport_projet_long.pdf). Ce rapport (mars 2026) précède la
 ré-analyse présentée ici ; là où ils diffèrent (HFV, instabilité, réglages de `nselectboot` en
 simulation), les chiffres de ce README sont ceux vérifiés contre les fichiers de résultats.
 

@@ -17,7 +17,7 @@ Une grille complète en **(\(\alpha\), \(\omega\))** (ici 21×21, pas 0,05) perm
 | **`run_all_nselectboot.R`** | 3 datasets réels (Canadian, Growth, Tecator ; hors AEMET), \(B=150\), grille 21×21 ; **optionnel** ensuite le volet simulé (voir ci-dessous) |
 | **`run_nselectboot.R`** | Un dataset (`DATASET` défini avant `source`) |
 | **`run_nselectboot_simulated.R`** | **Enrichissement** : mêmes paramètres nselectboot sur données **simulées** (Cas2_deriv, aligné exp. 3). Sorties dans `results_simulated/`. N’altère pas `experiments/03_simulated_hybride/`. |
-| **`analyse_nselectboot.R`** | Heatmaps `experiments/01_instabilite/figures/nselectboot_heatmap_*.png` (3 jeux réels) — intégrées au mémoire `docs/rapport_stage.tex` |
+| **`analyse_nselectboot.R`** | Heatmaps `experiments/01_instabilite/figures/nselectboot_heatmap_*.png` (3 jeux réels) — intégrées au mémoire `docs/rapport_projet_long.tex` |
 | **`analyse_nselectboot_simulated.R`** | Heatmaps `experiments/01_instabilite/figures/nselectboot_heatmap_sim_*.png` (scénarios S1–S4, seed de référence) |
 | **`generate_confusion_nselectboot.R`** | Matrices `confusion_nselectboot_*.csv` (règle : premier couple avec \(k_\text{opt}=k_\text{vrai}\), sinon le plus proche) — **jeux réels uniquement** |
 | **`run_all_complete.R`** | Enchaîne : nselectboot (3 réels **+** volet simulé activé) → heatmaps réels → heatmaps simulés → confusion |

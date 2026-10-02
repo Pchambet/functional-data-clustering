@@ -38,7 +38,7 @@ Le clustering doit exploiter **à la fois** la forme (niveau, dérivée via le g
 
 ### 2.3 Lien avec la vision du projet
 
-Voir le mémoire [`docs/rapport_stage.pdf`](../../docs/rapport_stage.pdf) : paradoxe **silhouette / ARI**, rôle des **dérivées** dans le signal fonctionnel, et distinction **`ω`** (distance `Dw`) vs **`r`** (pondération HFV en 02b).
+Voir le mémoire [`docs/rapport_projet_long.pdf`](../../docs/rapport_projet_long.pdf) : paradoxe **silhouette / ARI**, rôle des **dérivées** dans le signal fonctionnel, et distinction **`ω`** (distance `Dw`) vs **`r`** (pondération HFV en 02b).
 
 ---
 

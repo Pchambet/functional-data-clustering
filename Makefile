@@ -5,7 +5,7 @@
 #   make exp01-sim  same on simulated S1-S4, seed 1, fast mode (6x6 grid, B=60) — the committed run
 #   make exp03      simulated benchmark, 4 scenarios x 50 seeds — hours
 #   make tables     regenerate the LaTeX tables in docs/generated/ from the result CSVs
-#   make report     compile docs/rapport_stage.pdf and the stability report
+#   make report     compile docs/rapport_projet_long.pdf and the stability report
 #   make slides     compile docs/soutenance.pdf (needs the LaTeX beamer class)
 #   make figures    rebuild the README figures from the committed result tables (Python, uv)
 #   make check      verify README figures and numbers against the result tables
@@ -35,7 +35,7 @@ tables:
 	$(MAKE) -C docs tables
 
 report:
-	$(MAKE) -C docs rapport_stage.pdf
+	$(MAKE) -C docs rapport_projet_long.pdf
 	$(MAKE) -C experiments/01_instabilite
 
 slides:
