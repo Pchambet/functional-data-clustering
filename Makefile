@@ -6,12 +6,13 @@
 #   make exp03      simulated benchmark, 4 scenarios x 50 seeds — hours
 #   make tables     regenerate the LaTeX tables in docs/generated/ from the result CSVs
 #   make report     compile docs/rapport_stage.pdf and the stability report
+#   make slides     compile docs/soutenance.pdf (needs the LaTeX beamer class)
 #   make figures    rebuild the README figures from the committed result tables (Python, uv)
 #   make check      verify README figures and numbers against the result tables
 
 R_LOOP = for (d in c("canadian", "growth", "tecator")) { DATASET <<- d; source("src/main.R") }
 
-.PHONY: all setup pipeline exp01 exp01-sim exp03 tables report figures check clean
+.PHONY: all setup pipeline exp01 exp01-sim exp03 tables report slides figures check clean
 
 all: pipeline exp01 exp01-sim exp03 tables report figures
 
@@ -34,8 +35,11 @@ tables:
 	$(MAKE) -C docs tables
 
 report:
-	$(MAKE) -C docs
+	$(MAKE) -C docs rapport_stage.pdf
 	$(MAKE) -C experiments/01_instabilite
+
+slides:
+	$(MAKE) -C docs soutenance.pdf
 
 figures:
 	uv run --locked --script scripts/readme_figures.py

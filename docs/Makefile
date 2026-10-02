@@ -6,7 +6,8 @@ LATEXMK = latexmk -pdf -interaction=nonstopmode -halt-on-error
 
 .PHONY: all tables clean
 
-all: rapport_stage.pdf soutenance.pdf
+# The slides (soutenance.pdf) need the beamer class: `make -C docs soutenance.pdf`.
+all: rapport_stage.pdf
 
 %.pdf: %.tex
 	$(LATEXMK) $<
