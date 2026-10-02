@@ -5,9 +5,9 @@ Protocols and results that go beyond the single-dataset pipeline in
 
 | Folder | Question | Entry point |
 |---|---|---|
-| [`01_instabilite/`](01_instabilite/) | Can bootstrap instability (Fang & Wang, `fpc::nselectboot`) choose k on the (α, ω) grid? Real datasets (21 × 21 grid, B = 150) and simulated scenarios. | `make exp01` |
+| [`01_instabilite/`](01_instabilite/) | Can bootstrap instability (Fang & Wang, `fpc::nselectboot`) choose k on the (α, ω) grid? Real datasets (21 × 21 grid, B = 150) and simulated scenarios (6 × 6 grid, B = 60, seed 1). | `make exp01`, `make exp01-sim` |
 | [`03_simulated_hybride/`](03_simulated_hybride/) | Which fusion strategy recovers the classes when the signal is moved between curves and covariates? 4 scenarios × 50 seeds. | `make exp03` |
 
-Summary of the results: [`../README.md`](../README.md). Full write-up: the thesis
+Summary of the results: [`../README.md`](../README.md). Full write-up: the project report
 [`../docs/rapport_stage.pdf`](../docs/rapport_stage.pdf) and the stability report
 [`01_instabilite/rapport_instabilite.pdf`](01_instabilite/rapport_instabilite.pdf).

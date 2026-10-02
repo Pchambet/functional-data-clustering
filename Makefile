@@ -1,7 +1,8 @@
 # Entry points — run from the repository root.
 #   make setup      install / check the R packages (fda, fda.usc, cluster, mclust, fpc)
 #   make pipeline   smoothing -> FPCA -> distances -> clustering on the 3 labelled datasets
-#   make exp01      bootstrap instability (fpc::nselectboot) on the (alpha, omega) grid — hours
+#   make exp01      bootstrap instability (fpc::nselectboot), real datasets, 21x21 grid, B=150 — hours
+#   make exp01-sim  same on simulated S1-S4, seed 1, fast mode (6x6 grid, B=60) — the committed run
 #   make exp03      simulated benchmark, 4 scenarios x 50 seeds — hours
 #   make tables     regenerate the LaTeX tables in docs/generated/ from the result CSVs
 #   make report     compile docs/rapport_stage.pdf and the stability report
@@ -10,9 +11,9 @@
 
 R_LOOP = for (d in c("canadian", "growth", "tecator")) { DATASET <<- d; source("src/main.R") }
 
-.PHONY: all setup pipeline exp01 exp03 tables report figures check clean
+.PHONY: all setup pipeline exp01 exp01-sim exp03 tables report figures check clean
 
-all: pipeline exp01 exp03 tables report figures
+all: pipeline exp01 exp01-sim exp03 tables report figures
 
 setup:
 	Rscript setup.R
@@ -21,7 +22,10 @@ pipeline:
 	CNAM_EXPORT_COMPARAISON=1 Rscript -e 'source("setup.R"); $(R_LOOP)'
 
 exp01:
-	Rscript -e 'source("experiments/01_instabilite/run_all_complete.R")'
+	Rscript -e 'RUN_NSELECTBOOT_SIMULATED <- FALSE; source("experiments/01_instabilite/run_all_complete.R")'
+
+exp01-sim:
+	Rscript experiments/01_instabilite/run_simulated_instabilite_only.R
 
 exp03:
 	Rscript -e 'source("experiments/03_simulated_hybride/benchmark_all_methods_simulated.R")'

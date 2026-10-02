@@ -15,14 +15,8 @@
 #
 # ============================================================================
 
-if (basename(getwd()) != "cnam") {
-  if (file.exists("experiments/01_instabilite/run_simulated_instabilite_only.R")) {
-    # déjà à la racine
-  } else if (file.exists("../experiments/01_instabilite/run_simulated_instabilite_only.R")) {
-    setwd("..")
-  } else {
-    setwd("/Users/pierre/Desktop/cnam")
-  }
+if (!file.exists("experiments/01_instabilite/run_simulated_instabilite_only.R")) {
+  stop("Run from the repository root (see the Makefile).")
 }
 
 args <- commandArgs(trailingOnly = TRUE)

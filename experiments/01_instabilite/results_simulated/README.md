@@ -1,8 +1,9 @@
 # Results — nselectboot on simulated data (experiment 01, simulated part)
 
 Same scenarios S1–S4 and generator as experiment 03. The committed files come from the
-**fast mode** of `../run_simulated_instabilite_only.R` (6 × 6 grid, seed 1); `--full` runs the
-21 × 21 grid with B = 150 used on the real datasets (several hours).
+**fast mode** of `../run_simulated_instabilite_only.R` (6 × 6 grid, B = 60, seed 1;
+`make exp01-sim`); `--full` runs the 21 × 21 grid with B = 150 used on the real datasets
+(several hours).
 
 | File | Content |
 |---|---|

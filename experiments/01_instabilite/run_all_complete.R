@@ -7,14 +7,8 @@
 # Ou : source("experiments/01_instabilite/run_all_complete.R")
 # ============================================================================
 
-if (basename(getwd()) != "cnam") {
-  if (file.exists("experiments/01_instabilite/run_all_complete.R")) {
-    # déjà à la racine
-  } else if (file.exists("../experiments/01_instabilite/run_all_complete.R")) {
-    setwd("..")
-  } else {
-    setwd("/Users/pierre/Desktop/cnam")
-  }
+if (!file.exists("experiments/01_instabilite/run_all_complete.R")) {
+  stop("Run from the repository root (see the Makefile).")
 }
 
 # Exécution complète : inclure le volet simulé après les 3 jeux réels (voir protocole.md)
@@ -25,7 +19,8 @@ cat("═════════════════════════
 cat("  EXÉCUTION COMPLÈTE — Expérience 01 (instabilité / nselectboot)\n")
 cat("══════════════════════════════════════════════════════════════════════\n\n")
 
-cat(">>> Étape 1/4 : nselectboot (3 datasets + volet simulé, B=150, grille 21×21)\n")
+cat(">>> Étape 1/4 : nselectboot (3 datasets, B=150, grille 21×21",
+    if (RUN_NSELECTBOOT_SIMULATED) " + volet simulé" else "", ")\n", sep = "")
 source("experiments/01_instabilite/run_all_nselectboot.R", local = FALSE)
 cat("\n")
 
