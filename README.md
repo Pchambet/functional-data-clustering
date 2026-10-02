@@ -46,7 +46,7 @@ Mixed functional + vector data is common in operations: a sensor trace plus the 
 attributes, a load curve plus a customer profile, a flight's speed profile plus its aircraft
 and route. Segmenting such units is unsupervised by nature, so every fusion weight and every
 k has to be chosen by an internal criterion. This project measures how much that choice costs:
-on the same grid, silhouette-based tuning gives up 0.283 to 0.475 ARI against the best weights,
+on the same grid, silhouette-based tuning gives up 0.282 to 0.475 ARI against the best weights,
 about as much as the spread between geometries (0.229 to 0.748 on Canadian Weather). The
 criterion deserves as much attention as the distance.
 
@@ -106,7 +106,7 @@ corner only on Tecator, where it is the best grid point.
 | HFV + $D_K$ | 0.686 (0.332) | 0.368 (0.273) | 0.374 (0.284) |
 
 Takeaway: within B's grid, the silhouette-chosen point is a single-block corner on every
-dataset (covariates on Canadian Weather and Growth, curve level on Tecator) and lands 0.283 to
+dataset (covariates on Canadian Weather and Growth, curve level on Tecator) and lands 0.282 to
 0.475 ARI below the best point (hero figure). Across rows the highest silhouette never has the
 highest ARI either, although silhouettes from different spaces are not directly comparable
 (see limitations). On Tecator no fusion beats the derivative distance alone.

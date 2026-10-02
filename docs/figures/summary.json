@@ -234,7 +234,7 @@
       "best_omega": 0.8,
       "best_silhouette": 0.311,
       "best_ari": 0.898,
-      "ari_gap": 0.283
+      "ari_gap": 0.282
     },
     "Berkeley Growth": {
       "k": 2,

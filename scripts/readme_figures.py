@@ -93,7 +93,12 @@ def num(tex: str) -> float:
 
 
 def load_paradox() -> pd.DataFrame:
-    """Rows of the generated silhouette/ARI table (strategy B, real datasets)."""
+    """Rows of the generated silhouette/ARI table (strategy B, real datasets).
+
+    The table's gap column is computed in R on unrounded ARIs, so it can differ by 0.001 from
+    the difference of the 3-decimal ARIs it prints (0.898 - 0.616 = 0.282, table 0.283). The
+    README and the figure quote those 3-decimal ARIs, so the gap is recomputed from them.
+    """
     rows = []
     for line in PARADOX_TEX.read_text().splitlines():
         cells = [c.strip() for c in line.rstrip("\\ ").split("&")]
@@ -113,9 +118,11 @@ def load_paradox() -> pd.DataFrame:
                 "best_omega": num(best_pt[1]),
                 "best_silhouette": num(cells[6]),
                 "best_ari": num(cells[7]),
-                "ari_gap": num(cells[8]),
+                "ari_gap": round(num(cells[7]) - num(cells[4]), 3),
             }
         )
+        if abs(rows[-1]["ari_gap"] - num(cells[8])) > 0.0015:
+            raise ValueError(f"{cells[0]}: gap column {cells[8]} does not match the ARIs")
     if len(rows) != 3:
         raise ValueError(f"expected 3 datasets in {PARADOX_TEX}, parsed {len(rows)}")
     return pd.DataFrame(rows)
@@ -264,7 +271,7 @@ def fig_hero(paradox: pd.DataFrame, path: Path) -> None:
     ax.scatter(order.best_ari, y, s=90, color=TEAL, zorder=3, edgecolor="white", lw=1.5)
     for yi, r in order.iterrows():
         ax.annotate(
-            f"{r.sil_ari:.2f}\n{corner_name(r.sil_alpha, r.sil_omega)}",
+            f"{r.sil_ari:.3f}\n{corner_name(r.sil_alpha, r.sil_omega)}",
             (r.sil_ari, yi),
             xytext=(0, -24),
             textcoords="offset points",
@@ -273,7 +280,7 @@ def fig_hero(paradox: pd.DataFrame, path: Path) -> None:
             color=SLATE,
         )
         ax.annotate(
-            f"{r.best_ari:.2f}\n{corner_name(r.best_alpha, r.best_omega)}",
+            f"{r.best_ari:.3f}\n{corner_name(r.best_alpha, r.best_omega)}",
             (r.best_ari, yi),
             xytext=(0, -24),
             textcoords="offset points",
