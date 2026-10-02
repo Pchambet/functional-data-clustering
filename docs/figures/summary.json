@@ -115,10 +115,28 @@
       "S4": 0.016
     },
     "b_silhouette_corner_share": {
+      "S1": {
+        "derivative (1, 1)": 1.0,
+        "level (0, 1)": 0.0
+      },
+      "S2": {
+        "derivative (1, 1)": 1.0,
+        "level (0, 1)": 0.0
+      },
+      "S3": {
+        "derivative (1, 1)": 0.0,
+        "level (0, 1)": 0.8
+      },
+      "S4": {
+        "derivative (1, 1)": 0.0,
+        "level (0, 1)": 0.8
+      }
+    },
+    "b_equals_d1_share": {
       "S1": 1.0,
       "S2": 1.0,
-      "S3": 0.8,
-      "S4": 0.8
+      "S3": 0.0,
+      "S4": 0.0
     }
   },
   "real": {
@@ -198,6 +216,10 @@
       "DK_reconstruit": {
         "silhouette": 0.284,
         "ari": 0.374
+      },
+      "D1": {
+        "silhouette": 0.248,
+        "ari": 0.626
       }
     }
   },
@@ -244,18 +266,40 @@
       "true_k": 4,
       "cells": 441,
       "hits": 1,
+      "median_k": 2.0,
+      "k_opt_counts": {
+        "2": 223,
+        "4": 1,
+        "5": 16,
+        "6": 201
+      },
       "share": 0.002
     },
     "growth": {
       "true_k": 2,
       "cells": 441,
       "hits": 276,
+      "median_k": 2.0,
+      "k_opt_counts": {
+        "2": 276,
+        "3": 43,
+        "4": 1,
+        "5": 1,
+        "6": 120
+      },
       "share": 0.626
     },
     "tecator": {
       "true_k": 3,
       "cells": 441,
       "hits": 4,
+      "median_k": 2.0,
+      "k_opt_counts": {
+        "2": 382,
+        "3": 4,
+        "4": 46,
+        "6": 9
+      },
       "share": 0.009
     },
     "S1": {

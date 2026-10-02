@@ -121,6 +121,30 @@ def load_paradox() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def d1_from_grid(paradox: pd.DataFrame) -> pd.DataFrame:
+    """Derivative baseline D1 where the committed grid table records it.
+
+    D_w(1, 1) = D1 / max(D1), and PAM, silhouette and ARI are invariant to a global
+    rescaling of the dissimilarity, so the (alpha=1, omega=1) corner of B's grid *is*
+    the D1 baseline. The pipeline does not export D1 on real data; the paradox table
+    only records it when the silhouette choice or the ARI maximum falls on that corner.
+    """
+    rows = []
+    for r in paradox.itertuples():
+        for pre in ("sil", "best"):
+            if getattr(r, f"{pre}_alpha") == 1 and getattr(r, f"{pre}_omega") == 1:
+                rows.append(
+                    {
+                        "dataset": r.dataset,
+                        "method": "D1",
+                        "Silhouette": getattr(r, f"{pre}_silhouette"),
+                        "ARI": getattr(r, f"{pre}_ari"),
+                    }
+                )
+                break
+    return pd.DataFrame(rows, columns=["dataset", "method", "Silhouette", "ARI"])
+
+
 def load_real() -> pd.DataFrame:
     frames = []
     for name, path in REAL.items():
@@ -130,6 +154,7 @@ def load_real() -> pd.DataFrame:
         ]
         df["dataset"] = name
         frames.append(df[["dataset", "method", "Silhouette", "ARI"]])
+    frames.append(d1_from_grid(load_paradox()))
     return pd.concat(frames, ignore_index=True)
 
 
@@ -144,7 +169,15 @@ def nselect_hits() -> dict[str, dict[str, float]]:
     out = {}
     for name, k in TRUE_K.items():
         df = pd.read_csv(NSELECT / f"nselectboot_{name}.csv")
-        out[name] = {"true_k": k, "cells": len(df), "hits": int((df.k_opt == k).sum())}
+        out[name] = {
+            "true_k": k,
+            "cells": len(df),
+            "hits": int((df.k_opt == k).sum()),
+            "median_k": float(df.k_opt.median()),
+            "k_opt_counts": {
+                str(i): int(n) for i, n in df.k_opt.value_counts().sort_index().items()
+            },
+        }
     sim = pd.read_csv(NSELECT_SIM)
     for sc, df in sim.groupby("scenario"):
         k = int(df.k_vrai.iloc[0])
@@ -188,7 +221,15 @@ def summarize() -> dict:
             "c_beats_hfv_share": {sc: r3((v > 0).mean()) for sc, v in c_vs_hfv.groupby(level=0)},
             "c_minus_hfv_mean": {sc: r3(v.mean()) for sc, v in c_vs_hfv.groupby(level=0)},
             "b_silhouette_corner_share": {
-                sc: r3(((d.omega == 1) & (d.alpha.isin([0, 1]))).mean()) for sc, d in b_corner
+                sc: {
+                    "derivative (1, 1)": r3(((d.alpha == 1) & (d.omega == 1)).mean()),
+                    "level (0, 1)": r3(((d.alpha == 0) & (d.omega == 1)).mean()),
+                }
+                for sc, d in b_corner
+            },
+            "b_equals_d1_share": {
+                sc: r3(((v.B_silopt - v.D1).abs() < 1e-12).mean())
+                for sc, v in wide[["B_silopt", "D1"]].groupby(level=0)
             },
         },
         "real": {
@@ -203,8 +244,19 @@ def summarize() -> dict:
     }
 
 
+def corner_name(alpha: float, omega: float) -> str:
+    """Plain-word reading of a point of B's grid."""
+    if omega == 0:
+        return "covariates only"
+    if omega == 1 and alpha == 0:
+        return "curve level only"
+    if omega == 1 and alpha == 1:
+        return "derivative only"
+    return f"mixed: α={alpha:g}, ω={omega:g}"
+
+
 def fig_hero(paradox: pd.DataFrame, path: Path) -> None:
-    fig, ax = plt.subplots(figsize=(8.4, 3.4))
+    fig, ax = plt.subplots(figsize=(8.4, 3.9))
     order = paradox.iloc[::-1].reset_index(drop=True)
     y = np.arange(len(order))
     ax.hlines(y, order.sil_ari, order.best_ari, color=GRID, lw=6, zorder=1)
@@ -212,7 +264,7 @@ def fig_hero(paradox: pd.DataFrame, path: Path) -> None:
     ax.scatter(order.best_ari, y, s=90, color=TEAL, zorder=3, edgecolor="white", lw=1.5)
     for yi, r in order.iterrows():
         ax.annotate(
-            f"{r.sil_ari:.2f}\n(α={r.sil_alpha:g}, ω={r.sil_omega:g})",
+            f"{r.sil_ari:.2f}\n{corner_name(r.sil_alpha, r.sil_omega)}",
             (r.sil_ari, yi),
             xytext=(0, -24),
             textcoords="offset points",
@@ -221,7 +273,7 @@ def fig_hero(paradox: pd.DataFrame, path: Path) -> None:
             color=SLATE,
         )
         ax.annotate(
-            f"{r.best_ari:.2f}\n(α={r.best_alpha:g}, ω={r.best_omega:g})",
+            f"{r.best_ari:.2f}\n{corner_name(r.best_alpha, r.best_omega)}",
             (r.best_ari, yi),
             xytext=(0, -24),
             textcoords="offset points",
@@ -246,8 +298,9 @@ def fig_hero(paradox: pd.DataFrame, path: Path) -> None:
     ax.tick_params(axis="y", length=0)
     ax.text(
         0.0,
-        1.13,
-        "Silhouette tuning lands 0.28–0.48 ARI below the best grid point",
+        1.21,
+        f"Silhouette tuning lands {paradox.ari_gap.min():.3f}–{paradox.ari_gap.max():.3f} "
+        "ARI below the best grid point",
         transform=ax.transAxes,
         fontsize=12.5,
         fontweight="bold",
@@ -255,8 +308,8 @@ def fig_hero(paradox: pd.DataFrame, path: Path) -> None:
     ax.text(
         0.0,
         1.04,
-        "Strategy B: PAM on the weighted distance $D_w(α, ω)$, 21 × 21 grid, k fixed to the "
-        "true number of classes",
+        "Strategy B: PAM on $D_w(α, ω)$, 21 × 21 grid, k = true number of classes\n"
+        "ω = weight on curves vs covariates, α = weight on derivative vs curve level",
         transform=ax.transAxes,
         fontsize=9,
         color=SLATE,
@@ -338,7 +391,7 @@ def write_figures() -> dict:
 
 
 def headline_strings(s: dict) -> list[str]:
-    """Numbers the README must quote verbatim (3 decimals)."""
+    """Headline numbers both READMEs must quote (3 decimals)."""
     out = []
     for r in s["paradox"].values():
         out += [f"{r['sil_ari']:.3f}", f"{r['best_ari']:.3f}"]
@@ -346,7 +399,51 @@ def headline_strings(s: dict) -> list[str]:
         out.append(f"{max(v['ari'] for v in ds.values()):.3f}")
     for sc, m in s["simulated"]["winner"].items():
         out.append(f"{s['simulated']['mean_ari'][sc][m]:.3f}")
+    out.append(f"{max(s['simulated']['overall_mean_ari'].values()):.3f}")
     return out
+
+
+def pct(x: float) -> str:
+    return f"{round(100 * x)} %"
+
+
+def detail_strings(s: dict) -> list[str]:
+    """Every other number of README.md: table cells, shares, counts."""
+    sim = s["simulated"]
+    out = [
+        f"{v['ari']:.3f} ({v['silhouette']:.3f})" for ds in s["real"].values() for v in ds.values()
+    ]
+    nb = s["nselectboot_true_k"]
+    for name in ("canadian", "growth", "tecator"):
+        out.append(f"{nb[name]['hits']} / {nb[name]['cells']}")
+        out.append(f"{nb[name]['k_opt_counts'].get('2', 0)} / {nb[name]['cells']}")
+    sims = [nb[sc] for sc in ("S1", "S2", "S3", "S4")]
+    out.append(" / ".join(str(v["hits"]) for v in sims) + f" of {sims[0]['cells']}")
+    share = sim["c_beats_hfv_share"].values()
+    gap = sim["c_minus_hfv_mean"].values()
+    out += [
+        f"{round(100 * min(share))} % to {pct(max(share))}",
+        f"{min(gap):.3f} to {max(gap):.3f}",
+    ]
+    gaps = [r["ari_gap"] for r in s["paradox"].values()]
+    hfv = [abs(d["C_DK_ancien"]["ari"] - d["DK_reconstruit"]["ari"]) for d in s["real"].values()]
+    out += [f"{min(gaps):.3f} to {max(gaps):.3f}", f"within {max(hfv):.3f}"]
+    corner = sim["b_silhouette_corner_share"]
+    out += [
+        pct(min(corner[sc]["level (0, 1)"] for sc in ("S3", "S4"))),
+        f"{sim['mean_ari']['S1']['B_silopt']:.3f}",
+        f"{sim['mean_ari']['S3']['B_silopt']:.3f}",
+    ]
+    return out
+
+
+def flat(path: Path) -> str:
+    """README text with bold markers and line breaks removed, for substring checks."""
+    return " ".join(path.read_text().replace("**", "").split())
+
+
+def to_fr(v: str) -> str:
+    return v.replace(".", ",")
 
 
 def check() -> int:
@@ -355,8 +452,17 @@ def check() -> int:
     errors = []
     if committed != fresh:
         errors.append("docs/figures/summary.json is stale: run `make figures`")
-    readme = (ROOT / "README.md").read_text()
-    errors += [f"README.md does not quote {v}" for v in headline_strings(fresh) if v not in readme]
+    readme, readme_fr = (flat(ROOT / doc) for doc in ("README.md", "README.fr.md"))
+    errors += [
+        f"README.md does not quote {v}"
+        for v in headline_strings(fresh) + detail_strings(fresh)
+        if v not in readme
+    ]
+    errors += [
+        f"README.fr.md does not quote {to_fr(v)}"
+        for v in headline_strings(fresh)
+        if to_fr(v) not in readme_fr
+    ]
     for doc in ("README.md", "README.fr.md"):
         text = (ROOT / doc).read_text()
         for target in re.findall(r"\]\(([^)#\s]+)\)", text):

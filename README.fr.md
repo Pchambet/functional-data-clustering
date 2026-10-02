@@ -7,7 +7,9 @@ Classification non supervisée de données mixtes : chaque individu est décrit 
 $\mathbb{R}^p$). Comment fusionner les deux pour former des groupes, et peut-on régler cette
 fusion sans étiquettes ? Projet long du Master TRIED, CNAM (laboratoire CEDRIC, équipe MSDMA),
 2026, proposé et encadré par V. Audigier, F. Bouhadjera et N. Niang. Le rapport complet (18 pages) :
-[`docs/rapport_stage.pdf`](docs/rapport_stage.pdf).
+[`docs/rapport_stage.pdf`](docs/rapport_stage.pdf). Ce rapport (mars 2026) précède la
+ré-analyse présentée ici ; là où ils diffèrent (HFV, instabilité, réglages de `nselectboot` en
+simulation), les chiffres de ce README sont ceux vérifiés contre les fichiers de résultats.
 
 ![Silhouette contre meilleur ARI de la grille (oracle) sur trois jeux étiquetés](docs/figures/hero_silhouette_gap.png)
 
@@ -18,10 +20,12 @@ fusion sans étiquettes ? Projet long du Master TRIED, CNAM (laboratoire CEDRIC,
   mono-modalité et à un ARI bien inférieur au meilleur point de la même grille (un oracle qui
   exige les étiquettes) :
   0,616 contre 0,898 (Canadian Weather), 0,424 contre 0,756 (Berkeley Growth),
-  0,151 contre 0,626 (Tecator).
-- **Aucune géométrie ne domine partout.** Sur données réelles, le meilleur ARI parmi les méthodes
-  réglées sans étiquettes vient de la fusion la plus simple, scores FPCA + covariables puis
-  k-means (0,748 et 0,682), ou des seules covariables sur Tecator (0,546).
+  0,151 contre 0,626 (Tecator). Sur Tecator, le meilleur point de la grille est lui-même un coin
+  mono-bloc : la distance sur les dérivées seule.
+- **Aucune géométrie ne domine partout.** Parmi les méthodes qui n'exigent pas d'étiquettes, le
+  meilleur ARI vient de la fusion la plus simple, scores FPCA + covariables puis k-means, sur
+  Canadian Weather (0,748) et Berkeley Growth (0,682). Sur Tecator, aucune fusion ne fait mieux
+  que la distance sur les dérivées seule, $D_1$ (0,626), coin (α = 1, ω = 1) de la grille de B.
 - **Simulation (4 scénarios × 50 graines, n = 300, k = 3).** Le produit de noyaux gaussiens
   obtient le meilleur ARI moyen global (0,651) et gagne tant que les courbes séparent les classes
   (0,938 et 0,887 en S1–S2) ; quand le signal fonctionnel est divisé par deux, FPCA + k-means
@@ -29,8 +33,10 @@ fusion sans étiquettes ? Projet long du Master TRIED, CNAM (laboratoire CEDRIC,
 - **L'ACP hybride (HFV) ne bat pas le produit de noyaux simple** : elle est derrière lui dans
   62 % à 78 % des tirages appariés selon le scénario, et à égalité (à 0,003 près) sur données réelles.
 - **L'instabilité bootstrap (Fang & Wang) ne retrouve pas k** : le vrai nombre de classes est
-  choisi en 1 point sur 441 de la grille pour Canadian Weather et 4 sur 441 pour Tecator ;
-  k = 2 est sa réponse la plus fréquente sur les trois jeux réels.
+  choisi en 1 point sur 441 de la grille pour Canadian Weather et 4 sur 441 pour Tecator.
+- **Sa réponse par défaut est k = 2** (223 points sur 441 pour Canadian Weather, 382 pour
+  Tecator) ; sur Berkeley Growth, où le vrai k vaut 2, elle tombe donc juste par défaut
+  (276 sur 441).
 
 ## Méthodes comparées
 
@@ -38,14 +44,16 @@ fusion sans étiquettes ? Projet long du Master TRIED, CNAM (laboratoire CEDRIC,
   sur les covariables standardisées ($D_s$).
 - **A** : scores de l'ACP fonctionnelle (95 % de variance) concaténés à Z, puis k-means.
 - **B** : distance pondérée
-  $D_w(\alpha,\omega)=\sqrt{\omega[(1-\alpha)\tilde D_0^2+\alpha\tilde D_1^2]+(1-\omega)\tilde D_s^2}$, puis PAM.
-- **C** : produit de noyaux gaussiens $K_f K_s$, distance induite
-  $D_K=\sqrt{K_{ii}+K_{jj}-2K_{ij}}$, puis PAM.
+  $D_w(\alpha,\omega)=\sqrt{\omega D_p(\alpha)^2+(1-\omega)\tilde D_s^2}$, avec la partie courbes
+  $D_p(\alpha)=\sqrt{(1-\alpha)\tilde D_0^2+\alpha\tilde D_1^2}$ (tilde : divisée par son maximum), puis PAM.
+- **C** : produit de noyaux gaussiens sur $D_p(\alpha)$ (courbes) et $D_s$ (covariables),
+  largeurs par heuristique de la médiane, α choisi par silhouette parmi 21 valeurs, puis distance
+  induite $D_K=\sqrt{K_{ii}+K_{jj}-2K_{ij}}$ et PAM.
 - **HFV** : ACP hybride sur la covariance jointe des scores fonctionnels et des covariables
   (bloc croisé $V_{yx}$ compris), courbes reconstruites, puis $D_K$.
 
-Règle de conduite : les hyperparamètres sont choisis par silhouette ; l'ARI (vérité terrain)
-ne sert qu'à évaluer les partitions finales.
+Règle de conduite : les hyperparamètres ((α, ω) pour B, α pour C ; HFV n'en a pas) sont choisis
+par silhouette ; l'ARI (vérité terrain) ne sert qu'à évaluer les partitions finales.
 
 ## Reproduire
 
@@ -57,7 +65,8 @@ make setup && make pipeline   # trois jeux réels
 make exp03                    # benchmark simulé (long)
 make exp01                    # instabilité bootstrap, jeux réels (long)
 make exp01-sim                # idem sur S1–S4, mode rapide 6 × 6, B = 60
-make tables && make report    # tableaux LaTeX et rapport
+make tables && make report    # tableaux LaTeX, rapport et rapport d'instabilité
+make slides                   # diapositives de soutenance (classe LaTeX beamer)
 make figures && make check    # figures et chiffres du README (Python, uv, sans R)
 ```
 

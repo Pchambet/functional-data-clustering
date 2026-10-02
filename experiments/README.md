@@ -10,4 +10,6 @@ Protocols and results that go beyond the single-dataset pipeline in
 
 Summary of the results: [`../README.md`](../README.md). Full write-up: the project report
 [`../docs/rapport_stage.pdf`](../docs/rapport_stage.pdf) and the stability report
-[`01_instabilite/rapport_instabilite.pdf`](01_instabilite/rapport_instabilite.pdf).
+[`01_instabilite/rapport_instabilite.pdf`](01_instabilite/rapport_instabilite.pdf)
+(revised to match the result files). The project report (March 2026) predates the
+re-analysis in the README; where they differ, the README numbers are the checked ones.
