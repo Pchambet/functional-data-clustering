@@ -36,11 +36,11 @@ fusion sans étiquettes ? Projet long du Master TRIED, CNAM (laboratoire CEDRIC,
   sur les covariables standardisées ($D_s$).
 - **A** : scores de l'ACP fonctionnelle (95 % de variance) concaténés à Z, puis k-means.
 - **B** : distance pondérée
-  $D_w(\alpha,\omega)=\sqrt{\omega\,[(1-\alpha)\tilde D_0^2+\alpha\tilde D_1^2]+(1-\omega)\tilde D_s^2}$, puis PAM.
+  $D_w(\alpha,\omega)=\sqrt{\omega[(1-\alpha)\tilde D_0^2+\alpha\tilde D_1^2]+(1-\omega)\tilde D_s^2}$, puis PAM.
 - **C** : produit de noyaux gaussiens $K_f K_s$, distance induite
   $D_K=\sqrt{K_{ii}+K_{jj}-2K_{ij}}$, puis PAM.
-- **HFV** : ACP hybride sur la covariance jointe
-  $\begin{pmatrix}V_y & V_{yx}\\ V_{xy} & V_x\end{pmatrix}$, courbes reconstruites, puis $D_K$.
+- **HFV** : ACP hybride sur la covariance jointe des scores fonctionnels et des covariables
+  (bloc croisé $V_{yx}$ compris), courbes reconstruites, puis $D_K$.
 
 Règle de conduite : les hyperparamètres sont choisis par silhouette ; l'ARI (vérité terrain)
 ne sert qu'à évaluer les partitions finales.

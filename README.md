@@ -65,11 +65,11 @@ flowchart LR
    $D_s$) and four fusions:
    **A** FPCA scores concatenated with Z, then k-means;
    **B** weighted distance
-   $D_w(\alpha,\omega)=\sqrt{\omega\,[(1-\alpha)\tilde D_0^2+\alpha\tilde D_1^2]+(1-\omega)\tilde D_s^2}$, then PAM;
+   $D_w(\alpha,\omega)=\sqrt{\omega[(1-\alpha)\tilde D_0^2+\alpha\tilde D_1^2]+(1-\omega)\tilde D_s^2}$, then PAM;
    **C** product of Gaussian kernels $K_f K_s$ (median-heuristic bandwidths), turned into
    $D_K=\sqrt{K_{ii}+K_{jj}-2K_{ij}}$, then PAM;
-   **HFV** hybrid PCA on the joint covariance
-   $\begin{pmatrix}V_y & V_{yx}\\ V_{xy} & V_x\end{pmatrix}$, curves reconstructed, then $D_K$.
+   **HFV** hybrid PCA on the joint covariance of curve scores and covariates (including the
+   cross-covariance block $V_{yx}$), curves reconstructed, then $D_K$.
 3. **Protocol.** Hyperparameters (α, ω) are chosen by mean silhouette on a 21 × 21 grid; the
    labels are used **only** to score the final partition with the Adjusted Rand Index. The
    "best on grid" points in the hero figure are a counterfactual that needs the labels.
