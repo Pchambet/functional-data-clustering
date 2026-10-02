@@ -2,7 +2,7 @@
 # ÉTAPE 00 (SIMULÉ) : PRÉPARATION DES DONNÉES HYBRIDES SIMULÉES
 # ============================================================================
 #
-# Source : docs/biblio/notes/RE_Lectures_ACP_hybride/simulations.R (Cas2_deriv)
+# Source : src/simulate_cas2_deriv.R (Cas2_deriv)
 #
 # Sorties alignées avec le pipeline existant :
 # - Y_brut  : matrice (temps x individus) pour la partie fonctionnelle
@@ -14,7 +14,7 @@ library(fda)
 
 cat("\n--- Étape 00 (simulé) : Préparation des données ---\n")
 
-source("docs/biblio/notes/RE_Lectures_ACP_hybride/simulations.R")
+source("src/simulate_cas2_deriv.R")
 
 # Reproductibilité
 if (!exists("SEED_SIM")) SEED_SIM <- 42

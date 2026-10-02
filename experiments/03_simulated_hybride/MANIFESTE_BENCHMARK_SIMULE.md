@@ -4,7 +4,7 @@
 
 ## Générateur
 
-- **Fonction** : `Cas2_deriv` dans `docs/biblio/notes/RE_Lectures_ACP_hybride/simulations.R`
+- **Fonction** : `Cas2_deriv` dans `src/simulate_cas2_deriv.R`
 - **Entrée pipeline** : `src/00_preprocess_simulated.R`
 - **Effectifs** : `NC_SIM = c(100, 100, 100)` → \(n=300\), \(K=3\)
 - **Grille temporelle** : `LEN_T_SIM = 60` → \(N=60\) points sur \([0,1]\)

@@ -44,7 +44,7 @@ Voir [`STATE_OF_PROJECT.md`](../../STATE_OF_PROJECT.md) : paradoxe **silhouette 
 
 ## 3. Données simulées : générateur `Cas2_deriv`
 
-**Implémentation** : [`docs/biblio/notes/RE_Lectures_ACP_hybride/simulations.R`](../../docs/biblio/notes/RE_Lectures_ACP_hybride/simulations.R).  
+**Implémentation** : [`src/simulate_cas2_deriv.R`](../../src/simulate_cas2_deriv.R).  
 **Entrée pipeline** : [`src/00_preprocess_simulated.R`](../../src/00_preprocess_simulated.R).
 
 ### 3.1 Mécanisme
