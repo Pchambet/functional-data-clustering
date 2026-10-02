@@ -1,0 +1,286 @@
+{
+  "simulated": {
+    "runs": 1600,
+    "seeds_per_scenario": 50,
+    "mean_ari": {
+      "S1": {
+        "A": 0.782,
+        "B_silopt": 0.873,
+        "C_DK_ancien": 0.938,
+        "D0": 0.83,
+        "D1": 0.873,
+        "DK_reconstruit": 0.897,
+        "Df_silopt": 0.873,
+        "Ds": 0.567
+      },
+      "S2": {
+        "A": 0.524,
+        "B_silopt": 0.873,
+        "C_DK_ancien": 0.887,
+        "D0": 0.83,
+        "D1": 0.873,
+        "DK_reconstruit": 0.802,
+        "Df_silopt": 0.873,
+        "Ds": 0.333
+      },
+      "S3": {
+        "A": 0.623,
+        "B_silopt": 0.239,
+        "C_DK_ancien": 0.464,
+        "D0": 0.226,
+        "D1": 0.378,
+        "DK_reconstruit": 0.433,
+        "Df_silopt": 0.237,
+        "Ds": 0.511
+      },
+      "S4": {
+        "A": 0.315,
+        "B_silopt": 0.238,
+        "C_DK_ancien": 0.317,
+        "D0": 0.226,
+        "D1": 0.378,
+        "DK_reconstruit": 0.301,
+        "Df_silopt": 0.237,
+        "Ds": 0.247
+      }
+    },
+    "ci95": {
+      "S1": {
+        "A": 0.02,
+        "B_silopt": 0.015,
+        "C_DK_ancien": 0.01,
+        "D0": 0.015,
+        "D1": 0.015,
+        "DK_reconstruit": 0.023,
+        "Df_silopt": 0.015,
+        "Ds": 0.025
+      },
+      "S2": {
+        "A": 0.025,
+        "B_silopt": 0.015,
+        "C_DK_ancien": 0.015,
+        "D0": 0.015,
+        "D1": 0.015,
+        "DK_reconstruit": 0.035,
+        "Df_silopt": 0.015,
+        "Ds": 0.019
+      },
+      "S3": {
+        "A": 0.027,
+        "B_silopt": 0.012,
+        "C_DK_ancien": 0.037,
+        "D0": 0.013,
+        "D1": 0.013,
+        "DK_reconstruit": 0.032,
+        "Df_silopt": 0.011,
+        "Ds": 0.024
+      },
+      "S4": {
+        "A": 0.013,
+        "B_silopt": 0.012,
+        "C_DK_ancien": 0.017,
+        "D0": 0.013,
+        "D1": 0.013,
+        "DK_reconstruit": 0.018,
+        "Df_silopt": 0.011,
+        "Ds": 0.013
+      }
+    },
+    "winner": {
+      "S1": "C_DK_ancien",
+      "S2": "C_DK_ancien",
+      "S3": "A",
+      "S4": "D1"
+    },
+    "overall_mean_ari": {
+      "Ds": 0.414,
+      "D0": 0.528,
+      "Df_silopt": 0.555,
+      "B_silopt": 0.556,
+      "A": 0.561,
+      "DK_reconstruit": 0.608,
+      "D1": 0.626,
+      "C_DK_ancien": 0.651
+    },
+    "c_beats_hfv_share": {
+      "S1": 0.72,
+      "S2": 0.78,
+      "S3": 0.62,
+      "S4": 0.66
+    },
+    "c_minus_hfv_mean": {
+      "S1": 0.041,
+      "S2": 0.085,
+      "S3": 0.031,
+      "S4": 0.016
+    },
+    "b_silhouette_corner_share": {
+      "S1": 1.0,
+      "S2": 1.0,
+      "S3": 0.8,
+      "S4": 0.8
+    }
+  },
+  "real": {
+    "Canadian Weather": {
+      "D0": {
+        "silhouette": 0.285,
+        "ari": 0.229
+      },
+      "Ds": {
+        "silhouette": 0.448,
+        "ari": 0.616
+      },
+      "A": {
+        "silhouette": 0.395,
+        "ari": 0.748
+      },
+      "B_silopt": {
+        "silhouette": 0.448,
+        "ari": 0.616
+      },
+      "C_DK_ancien": {
+        "silhouette": 0.329,
+        "ari": 0.686
+      },
+      "DK_reconstruit": {
+        "silhouette": 0.332,
+        "ari": 0.686
+      }
+    },
+    "Berkeley Growth": {
+      "D0": {
+        "silhouette": 0.402,
+        "ari": 0.115
+      },
+      "Ds": {
+        "silhouette": 0.554,
+        "ari": 0.424
+      },
+      "A": {
+        "silhouette": 0.36,
+        "ari": 0.682
+      },
+      "B_silopt": {
+        "silhouette": 0.554,
+        "ari": 0.424
+      },
+      "C_DK_ancien": {
+        "silhouette": 0.261,
+        "ari": 0.368
+      },
+      "DK_reconstruit": {
+        "silhouette": 0.273,
+        "ari": 0.368
+      }
+    },
+    "Tecator": {
+      "D0": {
+        "silhouette": 0.509,
+        "ari": 0.151
+      },
+      "Ds": {
+        "silhouette": 0.476,
+        "ari": 0.546
+      },
+      "A": {
+        "silhouette": 0.403,
+        "ari": 0.439
+      },
+      "B_silopt": {
+        "silhouette": 0.509,
+        "ari": 0.151
+      },
+      "C_DK_ancien": {
+        "silhouette": 0.265,
+        "ari": 0.371
+      },
+      "DK_reconstruit": {
+        "silhouette": 0.284,
+        "ari": 0.374
+      }
+    }
+  },
+  "paradox": {
+    "Canadian Weather": {
+      "k": 4,
+      "sil_alpha": 0.0,
+      "sil_omega": 0.0,
+      "sil_silhouette": 0.448,
+      "sil_ari": 0.616,
+      "best_alpha": 0.55,
+      "best_omega": 0.8,
+      "best_silhouette": 0.311,
+      "best_ari": 0.898,
+      "ari_gap": 0.283
+    },
+    "Berkeley Growth": {
+      "k": 2,
+      "sil_alpha": 0.0,
+      "sil_omega": 0.0,
+      "sil_silhouette": 0.554,
+      "sil_ari": 0.424,
+      "best_alpha": 0.85,
+      "best_omega": 0.3,
+      "best_silhouette": 0.372,
+      "best_ari": 0.756,
+      "ari_gap": 0.332
+    },
+    "Tecator": {
+      "k": 3,
+      "sil_alpha": 0.0,
+      "sil_omega": 1.0,
+      "sil_silhouette": 0.509,
+      "sil_ari": 0.151,
+      "best_alpha": 1.0,
+      "best_omega": 1.0,
+      "best_silhouette": 0.248,
+      "best_ari": 0.626,
+      "ari_gap": 0.475
+    }
+  },
+  "nselectboot_true_k": {
+    "canadian": {
+      "true_k": 4,
+      "cells": 441,
+      "hits": 1,
+      "share": 0.002
+    },
+    "growth": {
+      "true_k": 2,
+      "cells": 441,
+      "hits": 276,
+      "share": 0.626
+    },
+    "tecator": {
+      "true_k": 3,
+      "cells": 441,
+      "hits": 4,
+      "share": 0.009
+    },
+    "S1": {
+      "true_k": 3,
+      "cells": 36,
+      "hits": 33,
+      "share": 0.917
+    },
+    "S2": {
+      "true_k": 3,
+      "cells": 36,
+      "hits": 26,
+      "share": 0.722
+    },
+    "S3": {
+      "true_k": 3,
+      "cells": 36,
+      "hits": 3,
+      "share": 0.083
+    },
+    "S4": {
+      "true_k": 3,
+      "cells": 36,
+      "hits": 0,
+      "share": 0.0
+    }
+  }
+}
